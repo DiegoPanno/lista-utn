@@ -59,9 +59,11 @@
 
       .tarea-completada {
         text-decoration: line-through;
-        color: rgb(4, 4, 4);
+        color: rgb(245, 7, 7);
+        
       }
 
+  
       .texto {
         display: flex;
         justify-content: left;
@@ -132,6 +134,12 @@
           border-radius: 25px;
         }
       }
+
+      .mensaje-completado{
+        font-weight: 600;
+        color: green;
+      }
+
     </style>
 
     <script type="text/babel">
@@ -194,8 +202,8 @@
 
         return (
           <>
-            <Button variant="danger" onClick={handleShow}>
-              <i className="fas fa-trash-alt"></i>
+            <Button  variant="light" onClick={handleShow}>
+              <i  className="fas fa-trash-alt btn-borrar"></i>
             </Button>
 
             <Modal show={show} onHide={handleClose} animation={false}>
@@ -227,14 +235,15 @@
       }
 
       const Tarea = (props) => {
-        const { texto, eliminarTarea, completada, completarTarea } = props;
+        const { texto, eliminarTarea, completada, completarTarea, mensaje } = props;
         return (
           <div className="conte">
             <div className={completada ? "tarea tarea-completada" : "tarea"}>
               <div className="texto" onClick={completarTarea}>
-                {texto}
+               ✔️ {texto}
               </div>
-            </div>
+              </div>
+              {completada && <div className="mensaje-completado">{mensaje}</div>}
 
             <BtnModal eliminarTarea={eliminarTarea} />
           </div>
@@ -259,6 +268,7 @@
           const tareaActualizadas = tarea.map((t) => {
             if (t.id === id) {
               t.completada = !t.completada;
+              t.mensaje = "Tarea completada!";
             }
             return t;
           });
@@ -269,6 +279,7 @@
 
         useEffect(() => {
           const datosGuardados = localStorage.getItem("clave");
+          console.log("Tarea completada!", datosGuardados);
           if (datosGuardados) {
             setTarea(JSON.parse(datosGuardados));
           }
@@ -285,6 +296,7 @@
                 eliminarTarea={() => eliminarTarea(t.id)}
                 completada={t.completada}
                 completarTarea={() => completarTarea(t.id)}
+                mensaje={t.mensaje}
               />
             ))}
           </div>
